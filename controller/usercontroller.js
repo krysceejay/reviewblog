@@ -1,7 +1,11 @@
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const config = require("config");
+
+//load user model
 const User = require("../models/User");
 
-exports.registerUser = async (req, res, next) => {
+exports.registerUser = async (req, res) => {
   const { name, email, password, propix } = req.body;
   try {
     let user = await User.findOne({ email });
@@ -23,6 +27,45 @@ exports.registerUser = async (req, res, next) => {
 
     const createdUser = await user.save();
     return res.json(createdUser);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server error");
+  }
+};
+
+exports.loginUser = async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    let user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ errors: [{ msg: "Invalid Credentials" }] });
+    }
+    //Check password
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ errors: [{ msg: "Invalid Credentials" }] });
+    }
+    //Create JWT Payload
+    const payload = {
+      user: {
+        id: user.id
+      }
+    };
+
+    //Sign token
+    jwt.sign(
+      payload,
+      config.get("jwtSecret"),
+      { expiresIn: 360000 },
+      (err, token) => {
+        if (err) throw err;
+        return res.json({
+          success: true,
+          token: "Bearer " + token
+        });
+      }
+    );
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server error");
