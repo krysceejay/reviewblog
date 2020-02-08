@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 const connectDB = require("./config/db");
 const users = require("./routes/api/users");
 const posts = require("./routes/api/posts");
+const categories = require("./routes/api/category");
 
 const app = express();
 
@@ -17,6 +18,7 @@ connectDB();
 //Use routes
 app.use("/api/users", users);
 app.use("/api/posts", posts);
+app.use("/api/categories", categories);
 
 app.get("/", (req, res) => res.send("Hello"));
 
