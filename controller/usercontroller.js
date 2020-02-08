@@ -31,7 +31,7 @@ exports.registerUser = async (req, res) => {
     console.error(err.message);
     res.status(500).send("Server error");
   }
-};
+}
 
 exports.loginUser = async (req, res) => {
   const { email, password } = req.body;
@@ -70,4 +70,4 @@ exports.loginUser = async (req, res) => {
     console.error(err.message);
     res.status(500).send("Server error");
   }
-};
+}
