@@ -1,7 +1,7 @@
 const express = require("express");
-const connectDB = require("./config/db");
 const bodyParser = require("body-parser");
 
+const connectDB = require("./config/db");
 const users = require("./routes/api/users");
 const posts = require("./routes/api/posts");
 

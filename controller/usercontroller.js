@@ -31,7 +31,7 @@ exports.registerUser = async (req, res) => {
     console.error(err.message);
     res.status(500).send("Server error");
   }
-}
+};
 
 exports.loginUser = async (req, res) => {
   const { email, password } = req.body;
@@ -49,7 +49,10 @@ exports.loginUser = async (req, res) => {
     //Create JWT Payload
     const payload = {
       user: {
-        id: user.id
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        propix: user.propix
       }
     };
 
@@ -62,7 +65,7 @@ exports.loginUser = async (req, res) => {
         if (err) throw err;
         return res.json({
           success: true,
-          token: "Bearer " + token
+          token
         });
       }
     );
@@ -70,4 +73,8 @@ exports.loginUser = async (req, res) => {
     console.error(err.message);
     res.status(500).send("Server error");
   }
-}
+};
+
+exports.currentUser = async (req, res) => {
+  return res.json(req.user);
+};
